@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú del Curso - Programación Web</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(-45deg, #0a0a0a, #1a1a2e, #16213e, #0f3460);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(102, 126, 234, 0.3);
+            padding: 1.5rem 2rem;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-icon {
+            font-size: 2.5rem;
+        }
+
+        .header-text h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-text p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(40, 40, 40, 0.8);
+            border-radius: 12px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .user-avatar {
+            font-size: 2rem;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #f093fb;
+        }
+
+        .progress-section {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .progress-card {
+            background: rgba(30, 30, 30, 0.9);
+            backdrop-filter: blur(15px);
+            border-radius: 16px;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            padding: 2rem;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .progress-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .progress-percentage {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 12px;
+            background: rgba(40, 40, 40, 0.8);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+            animation: progressPulse 2s ease infinite;
+        }
+
+        @keyframes progressPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .main-content {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem 4rem;
+        }
+
+        .week-section {
+            margin-bottom: 3rem;
+        }
+
+        .week-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(30, 30, 30, 0.9);
+            backdrop-filter: blur(15px);
+            border-radius: 16px;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .week-icon {
+            font-size: 3rem;
+        }
+
+        .week-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .week-subtitle {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .day-card {
+            background: rgba(30, 30, 30, 0.9);
+            backdrop-filter: blur(15px);
+            border-radius: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .day-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .day-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .day-card:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .day-card.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .day-card.locked:hover {
+            transform: none;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .day-card.completed {
+            border-color: #48bb78;
+        }
+
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .day-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .day-status {
+            font-size: 1.5rem;
+        }
+
+        .day-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .day-description {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .day-modules {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .module-tag {
+            font-size: 0.75rem;
+            padding: 0.35rem 0.75rem;
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(102, 126, 234, 0.4);
+            border-radius: 6px;
+            color: #f093fb;
+        }
+
+        .day-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .day-duration {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .start-button {
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .start-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .lock-icon {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .days-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .main-content {
+                padding: 0 1rem 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation"></div>
+
+    <div class="header">
+        <div class="header-content">
+            <div class="header-title">
+                <div class="header-icon">🚀</div>
+                <div class="header-text">
+                    <h1>Curso de Programación Web</h1>
+                    <p>20 días para convertirte en desarrollador</p>
+                </div>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">👤</div>
+                <div class="user-name" id="userName">Usuario</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="progress-section">
+        <div class="progress-card">
+            <div class="progress-header">
+                <div class="progress-title">📊 Tu Progreso General</div>
+                <div class="progress-percentage" id="progressPercentage">0%</div>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progressBar" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <!-- Semana 1 -->
+        <div class="week-section">
+            <div class="week-header">
+                <div class="week-icon">📅</div>
+                <div>
+                    <div class="week-title">Semana 1: Fundamentos</div>
+                    <div class="week-subtitle">Introducción al desarrollo web y conceptos básicos</div>
+                </div>
+            </div>
+            <div class="days-grid">
+                <!-- Días se generarán dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Semana 2 -->
+        <div class="week-section">
+            <div class="week-header">
+                <div class="week-icon">⚡</div>
+                <div>
+                    <div class="week-title">Semana 2: JavaScript Básico</div>
+                    <div class="week-subtitle">Añade interactividad a tus páginas web</div>
+                </div>
+            </div>
+            <div class="days-grid">
+                <!-- Días se generarán dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Semana 3 -->
+        <div class="week-section">
+            <div class="week-header">
+                <div class="week-icon">🚀</div>
+                <div>
+                    <div class="week-title">Semana 3: JavaScript Avanzado</div>
+                    <div class="week-subtitle">APIs, asincronía y proyectos complejos</div>
+                </div>
+            </div>
+            <div class="days-grid">
+                <!-- Días se generarán dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Semana 4 -->
+        <div class="week-section">
+            <div class="week-header">
+                <div class="week-icon">🎓</div>
+                <div>
+                    <div class="week-title">Semana 4: Proyecto Final</div>
+                    <div class="week-subtitle">Construye tu portafolio y proyecto integrador</div>
+                </div>
+            </div>
+            <div class="days-grid">
+                <!-- Días se generarán dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos de todos los días del curso
+        const courseDays = [
+            // Semana 1
+            { day: 1, title: "Introducción al Mundo Tech", description: "Descubre cómo funcionan las plataformas gigantes y las carreras disponibles", modules: ["📋 Inicio del Curso", "💼 Carreras Tech", "🌐 Plataformas", "📚 Fundamentos"], duration: "90 minutos", week: 1 },
+            { day: 2, title: "Setup y Configuración", description: "Instala y configura VS Code, Python y extensiones necesarias", modules: ["🛠️ VS Code", "🐍 Python", "🧩 Extensiones"], duration: "60 minutos", week: 1 },
+            { day: 3, title: "HTML desde Cero", description: "Aprende la estructura de las páginas web y etiquetas básicas", modules: ["🏗️ Estructura HTML", "📝 Etiquetas", "🔗 Enlaces"], duration: "90 minutos", week: 1 },
+            { day: 4, title: "CSS: Dando Estilo", description: "Aprende a diseñar páginas hermosas con colores, fuentes y layouts", modules: ["🎨 Selectores CSS", "📦 Box Model", "🌈 Colores"], duration: "90 minutos", week: 1 },
+            { day: 5, title: "Proyecto: Pokémon Cards", description: "Crea tu primer proyecto combinando HTML y CSS", modules: ["🎴 Proyecto Final", "🏗️ HTML + CSS", "🎯 Práctica"], duration: "120 minutos", week: 1 },
+            
+            // Semana 2
+            { day: 6, title: "JavaScript: Variables y Tipos", description: "Primeros pasos en programación: variables, tipos de datos y operadores", modules: ["📦 Variables", "🔢 Tipos de Datos", "➕ Operadores"], duration: "90 minutos", week: 2 },
+            { day: 7, title: "Funciones y Condicionales", description: "Aprende a crear funciones y tomar decisiones en tu código", modules: ["🔧 Funciones", "🔀 If/Else", "🔄 Bucles"], duration: "90 minutos", week: 2 },
+            { day: 8, title: "DOM Manipulation", description: "Manipula elementos de la página con JavaScript", modules: ["🌳 DOM", "🎯 Eventos", "✨ Interactividad"], duration: "90 minutos", week: 2 },
+            { day: 9, title: "Proyecto: Calculadora", description: "Construye una calculadora funcional con todo lo aprendido", modules: ["🔢 Proyecto", "💻 JavaScript", "🎨 UI/UX"], duration: "120 minutos", week: 2 },
+            { day: 10, title: "Arrays y Objetos", description: "Maneja colecciones de datos y estructuras complejas", modules: ["📚 Arrays", "🗃️ Objetos", "🔄 Métodos"], duration: "90 minutos", week: 2 },
+            
+            // Semana 3
+            { day: 11, title: "Fetch API y JSON", description: "Conecta tu aplicación con APIs externas y maneja datos JSON", modules: ["🌐 APIs", "📄 JSON", "🔄 Fetch"], duration: "90 minutos", week: 3 },
+            { day: 12, title: "Asincronía y Promesas", description: "Maneja operaciones asíncronas con Promises y Async/Await", modules: ["⏳ Async", "🤝 Promises", "⚡ Await"], duration: "90 minutos", week: 3 },
+            { day: 13, title: "Local Storage", description: "Guarda datos en el navegador para persistencia local", modules: ["💾 Storage", "🗄️ Persistencia", "🔐 Datos"], duration: "60 minutos", week: 3 },
+            { day: 14, title: "Proyecto: App del Clima", description: "Crea una aplicación que consume una API de clima real", modules: ["🌤️ Proyecto", "🌐 API Real", "📱 App Completa"], duration: "120 minutos", week: 3 },
+            { day: 15, title: "ES6+ Avanzado", description: "Destructuring, spread operator, módulos y más características modernas", modules: ["🆕 ES6+", "📦 Módulos", "✨ Features"], duration: "90 minutos", week: 3 },
+            
+            // Semana 4
+            { day: 16, title: "Git y GitHub", description: "Control de versiones y colaboración con Git", modules: ["🔧 Git", "🐙 GitHub", "🌿 Branches"], duration: "90 minutos", week: 4 },
+            { day: 17, title: "Responsive Design", description: "Diseña páginas que se adapten a todos los dispositivos", modules: ["📱 Mobile First", "💻 Media Queries", "🎨 Flexbox/Grid"], duration: "90 minutos", week: 4 },
+            { day: 18, title: "Deploy y Hosting", description: "Publica tus proyectos en internet con Netlify/Vercel", modules: ["🌐 Deploy", "☁️ Hosting", "🚀 Publicar"], duration: "60 minutos", week: 4 },
+            { day: 19, title: "Proyecto Final - Parte 1", description: "Diseña y planifica tu proyecto integrador completo", modules: ["🎯 Planificación", "🎨 Diseño", "📝 Wireframes"], duration: "120 minutos", week: 4 },
+            { day: 20, title: "Proyecto Final - Parte 2", description: "Construye y despliega tu proyecto final", modules: ["🏗️ Desarrollo", "🚀 Deploy", "🎓 Graduación"], duration: "180 minutos", week: 4 }
+        ];
+
+        // Inicializar localStorage si no existe
+        function initializeStorage() {
+            if (!localStorage.getItem('completedDays')) {
+                localStorage.setItem('completedDays', JSON.stringify([]));
+                console.log('📦 LocalStorage inicializado con array vacío');
+            }
+            if (!localStorage.getItem('userName')) {
+                localStorage.setItem('userName', 'Usuario');
+            }
+        }
+
+        // Obtener días completados
+        function getCompletedDays() {
+            const completed = JSON.parse(localStorage.getItem('completedDays') || '[]');
+            console.log('✅ Días completados:', completed);
+            return completed;
+        }
+
+        // Verificar si un día está desbloqueado
+        function isDayUnlocked(dayNumber) {
+            const completedDays = getCompletedDays();
+            // El día 1 siempre está desbloqueado
+            if (dayNumber === 1) return true;
+            // Los demás días requieren que el anterior esté completado
+            return completedDays.includes(dayNumber - 1);
+        }
+
+        // Verificar si un día está completado
+        function isDayCompleted(dayNumber) {
+            const completedDays = getCompletedDays();
+            return completedDays.includes(dayNumber);
+        }
+
+        // Actualizar progreso general
+        function updateProgress() {
+            const completedDays = getCompletedDays();
+            const totalDays = 20;
+            const progress = (completedDays.length / totalDays) * 100;
+            
+            document.getElementById('progressPercentage').textContent = Math.round(progress) + '%';
+            document.getElementById('progressBar').style.width = progress + '%';
+            
+            console.log(`📊 Progreso: ${completedDays.length}/${totalDays} días (${Math.round(progress)}%)`);
+        }
+
+        // Crear HTML de una card de día
+        function createDayCard(dayData) {
+            const isCompleted = isDayCompleted(dayData.day);
+            const isUnlocked = isDayUnlocked(dayData.day);
+            
+            let statusIcon = '🔒';
+            let statusClass = 'locked';
+            
+            if (isCompleted) {
+                statusIcon = '✅';
+                statusClass = 'completed';
+            } else if (isUnlocked) {
+                statusIcon = '🎯';
+                statusClass = '';
+            }
+
+            const modulesHTML = dayData.modules.map(module => 
+                `<span class="module-tag">${module}</span>`
+            ).join('');
+
+            return `
+                <div class="day-card ${statusClass}" onclick="${isUnlocked ? `goToDay(${dayData.day})` : ''}" data-day="${dayData.day}">
+                    <div class="day-header">
+                        <div class="day-number">Día ${dayData.day}</div>
+                        <div class="${isCompleted || isUnlocked ? 'day-status' : 'lock-icon'}">${statusIcon}</div>
+                    </div>
+                    <div class="day-title">${dayData.title}</div>
+                    <div class="day-description">${dayData.description}</div>
+                    <div class="day-modules">${modulesHTML}</div>
+                    <div class="day-footer">
+                        <div class="day-duration">⏱️ ${dayData.duration}</div>
+                        <button class="start-button" ${!isUnlocked ? 'disabled' : ''}>
+                            ${isCompleted ? 'Revisar 📖' : isUnlocked ? 'Comenzar 🎯' : 'Bloqueado 🔒'}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Renderizar todos los días
+        function renderAllDays() {
+            const weeks = document.querySelectorAll('.week-section');
+            
+            weeks.forEach((week, index) => {
+                const weekNumber = index + 1;
+                const daysGrid = week.querySelector('.days-grid');
+                const weekDays = courseDays.filter(day => day.week === weekNumber);
+                
+                daysGrid.innerHTML = weekDays.map(day => createDayCard(day)).join('');
+            });
+            
+            console.log('🎨 Todas las cards renderizadas');
+        }
+
+        // Función para ir a un día específico
+        function goToDay(dayNumber) {
+            console.log(`🚀 Navegando a Día ${dayNumber}`);
+            window.location.href = `Dia${dayNumber}/inicio_curso.html`;
+        }
+
+        // Función global para marcar día como completado (llamada desde otras páginas)
+        window.completeDay = function(dayNumber) {
+            const completedDays = getCompletedDays();
+            
+            if (!completedDays.includes(dayNumber)) {
+                completedDays.push(dayNumber);
+                completedDays.sort((a, b) => a - b); // Ordenar
+                localStorage.setItem('completedDays', JSON.stringify(completedDays));
+                console.log(`✅ Día ${dayNumber} marcado como completado`);
+                console.log('📦 Array actualizado:', completedDays);
+                
+                // Actualizar UI
+                updateProgress();
+                renderAllDays();
+                
+                // Mostrar notificación
+                showNotification(`🎉 ¡Día ${dayNumber} completado! Día ${dayNumber + 1} desbloqueado.`);
+            }
+        };
+
+        // Mostrar notificación
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #48bb78, #38a169);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 12px;
+                font-weight: 600;
+                z-index: 9999;
+                animation: slideInRight 0.5s ease;
+                box-shadow: 0 10px 30px rgba(72, 187, 120, 0.4);
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.5s ease';
+                setTimeout(() => notification.remove(), 500);
+            }, 3000);
+        }
+
+        // Inicializar cuando la página carga
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Iniciando aplicación del menú');
+            
+            // Inicializar storage
+            initializeStorage();
+            
+            // Cargar nombre de usuario
+            const userName = localStorage.getItem('userName') || 'Usuario';
+            document.getElementById('userName').textContent = userName;
+            console.log('👤 Usuario:', userName);
+            
+            // Renderizar días
+            renderAllDays();
+            
+            // Actualizar progreso
+            updateProgress();
+            
+            // Logging final
+            console.log('✅ Menú cargado completamente');
+            console.log('📦 Estado del localStorage:', {
+                completedDays: getCompletedDays(),
+                userName: userName
+            });
+        });
+
+        // Agregar estilos para animaciones de notificaciones
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes slideOutRight {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
